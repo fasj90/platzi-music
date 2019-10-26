@@ -1,28 +1,86 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="pug">
+  #app
+    pm-header
+
+    pm-loader(v-show="isLoading")
+    section.section(v-show="!isLoading")
+      nav.nav.has-shadow
+        .container
+          input.input.is-large(
+            type="text",
+            placeholder="Buscar canciones",
+            v-model="searchQuery"
+          )
+          a.button.is-info.is-large(@click="search") Buscar
+          a.button.is-danger.is-large &times;
+      .container
+        p
+          small {{ searchMessage }}
+
+      .container.results
+        .columns.is-multiline
+          .column.is-one-quarter(v-for="t in tracks")
+            pm-track(v-bind:track="t" v-on:select="setSelectedTrack")
+    pm-footer
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import PmFooter from './components/layout/Footer.vue';
+import PmHeader from './components/layout/Header.vue';
+import PmTrack from './components/Track.vue';
+import PmLoader from './components/shared/Loader.vue';
+import trackService from './services/track';
 
 export default {
   name: 'app',
+
   components: {
-    HelloWorld,
+    PmFooter,
+    PmHeader,
+    PmTrack,
+    PmLoader,
+  },
+
+  data() {
+    return {
+      searchQuery: '',
+      tracks: [],
+      isLoading: false,
+      selectedTrack: '',
+    };
+  },
+
+  computed: {
+    searchMessage() {
+      return `Encontrados: ${this.tracks.length}`;
+    },
+  },
+
+  methods: {
+    search() {
+      if (!this.searchQuery) { return; }
+      this.isLoading = true;
+      trackService.search(this.searchQuery)
+        .then((res) => {
+          this.tracks = res.tracks.items;
+          this.isLoading = false;
+        });
+    },
+    setSelectedTrack(id) {
+      this.selectedTrack = id;
+    },
   },
 };
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  @import './scss/main.scss';
+
+  .results {
+    margin-top: 50px;
+  }
+
+  .is-active {
+    border: 3px #48c774 solid;
+  }
 </style>
