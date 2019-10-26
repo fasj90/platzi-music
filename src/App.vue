@@ -2,9 +2,12 @@
   #app
     pm-header
 
+    pm-notification(v-show="showNotification")
+      p(slot="body") Results not found
+
     pm-loader(v-show="isLoading")
     section.section(v-show="!isLoading")
-      nav.nav.has-shadow
+      nav.nav
         .container
           input.input.is-large(
             type="text",
@@ -20,16 +23,23 @@
       .container.results
         .columns.is-multiline
           .column.is-one-quarter(v-for="t in tracks")
-            pm-track(v-bind:track="t" v-on:select="setSelectedTrack")
+            pm-track(
+              v-bind:class="{'is-active': t.id === selectedTrack}",
+              v-bind:track="t",
+              v-on:select="setSelectedTrack")
     pm-footer
 </template>
 
 <script>
+import trackService from './services/track';
+
 import PmFooter from './components/layout/Footer.vue';
 import PmHeader from './components/layout/Header.vue';
+
 import PmTrack from './components/Track.vue';
+
 import PmLoader from './components/shared/Loader.vue';
-import trackService from './services/track';
+import PmNotification from './components/shared/Notification.vue';
 
 export default {
   name: 'app',
@@ -39,6 +49,7 @@ export default {
     PmHeader,
     PmTrack,
     PmLoader,
+    PmNotification,
   },
 
   data() {
@@ -47,7 +58,18 @@ export default {
       tracks: [],
       isLoading: false,
       selectedTrack: '',
+      showNotification: false,
     };
+  },
+
+  watch: {
+    showNotification() {
+      if (this.showNotification) {
+        setTimeout(() => {
+          this.showNotification = false;
+        }, 3000);
+      }
+    },
   },
 
   computed: {
@@ -62,6 +84,7 @@ export default {
       this.isLoading = true;
       trackService.search(this.searchQuery)
         .then((res) => {
+          this.showNotification = res.tracks.total === 0;
           this.tracks = res.tracks.items;
           this.isLoading = false;
         });

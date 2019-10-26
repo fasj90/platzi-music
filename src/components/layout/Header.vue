@@ -5,7 +5,7 @@
         .container
           .nav-left
             .nav-item
-              strong Platzi Music
+              strong Platzi Music 😊
           .nav-right.nav-menu
 
     .hero-body

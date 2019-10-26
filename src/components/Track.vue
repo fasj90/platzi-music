@@ -19,7 +19,7 @@
         nav.level
           .level-left
             a.level-item
-              span.icon.is-small(v-on:click="selectTrack") 🤪
+              span.icon.is-small(v-on:click="selectTrack") ▶
 </template>
 
 <script>
