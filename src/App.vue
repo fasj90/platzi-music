@@ -2,8 +2,8 @@
   #app
     pm-header
 
-    pm-notification(v-show="showNotification")
-      p(slot="body") Results not found
+    pm-notification(v-show="showNotification" v-bind:notification-type="notificationType")
+      p(slot="body") {{notificationMessage}}
 
     pm-loader(v-show="isLoading")
     section.section(v-show="!isLoading")
@@ -58,7 +58,8 @@ export default {
       tracks: [],
       isLoading: false,
       selectedTrack: '',
-      showNotification: false,
+      showNotificationSuccess: false,
+      showNotificationFailed: false,
     };
   },
 
@@ -66,7 +67,7 @@ export default {
     showNotification() {
       if (this.showNotification) {
         setTimeout(() => {
-          this.showNotification = false;
+          this.hideNotifications();
         }, 3000);
       }
     },
@@ -74,7 +75,29 @@ export default {
 
   computed: {
     searchMessage() {
-      return `Encontrados: ${this.tracks.length}`;
+      return `Found: ${this.tracks.length}`;
+    },
+    showNotification() {
+      return this.showNotificationSuccess || this.showNotificationFailed;
+    },
+    notificationMessage() {
+      let message = 'N/A';
+      if (this.showNotificationSuccess) {
+        message = `${this.tracks.length} tracks found.`;
+      } else if (this.showNotificationFailed) {
+        message = 'No tracks found.';
+      }
+      return message;
+    },
+    notificationType() {
+      if (this.showNotificationSuccess) {
+        return 'Success';
+      }
+      if (this.showNotificationFailed) {
+        return 'Failed';
+      }
+
+      return 'N/A';
     },
   },
 
@@ -84,13 +107,24 @@ export default {
       this.isLoading = true;
       trackService.search(this.searchQuery)
         .then((res) => {
-          this.showNotification = res.tracks.total === 0;
+          if (res.tracks.total > 0) {
+            this.showNotificationSuccess = true;
+            this.showNotificationFailed = false;
+          } else {
+            this.showNotificationSuccess = false;
+            this.showNotificationFailed = true;
+          }
+
           this.tracks = res.tracks.items;
           this.isLoading = false;
         });
     },
     setSelectedTrack(id) {
       this.selectedTrack = id;
+    },
+    hideNotifications() {
+      this.showNotificationSuccess = false;
+      this.showNotificationFailed = false;
     },
   },
 };
