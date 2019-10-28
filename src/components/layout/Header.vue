@@ -11,5 +11,14 @@
     .hero-body
       .container.has-text-centered
         h1.title Platzi Music
-        h1.subtitle Canciones que estan Vue-nísimas
+        h2.subtitle Canciones que estan Vue-nísimas
+        pm-player
 </template>
+
+<script>
+import PmPlayer from '../Player.vue';
+
+export default {
+  components: { PmPlayer },
+};
+</script>

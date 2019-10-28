@@ -1,7 +1,7 @@
 <template lang="pug">
   .container
     .columns
-      .column.is-5.is-offset-4      v-bind:class="{'is-active': t.id === selectedTrack}"
+      .column.is-5.is-offset-4
         .notification.is-success(v-show="notificationType==='Success'")
           slot(name="body") Something went wrong
         .notification.is-danger(v-show="notificationType==='Failed'")
