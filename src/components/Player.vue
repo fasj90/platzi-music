@@ -1,5 +1,5 @@
 <template lang="pug">
-  .content
+  .content(v-if="track && track.album")
     p
       img(v-bind:src="track.album.images[0].url")
     p

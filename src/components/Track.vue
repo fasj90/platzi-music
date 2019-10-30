@@ -2,7 +2,7 @@
   .card
     .card-image
       figure.image.is-1by1
-        img(v-bind:src="track.album.images[0].url")
+        img(v-if="track && track.album", v-bind:src="track.album.images[0].url")
 
     .card-content
       .media
