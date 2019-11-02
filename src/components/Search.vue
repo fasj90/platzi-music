@@ -10,7 +10,8 @@
           input.input.is-large(
             type="text",
             placeholder="Buscar canciones",
-            v-model="searchQuery"
+            v-model="searchQuery",
+            v-on:keyup.enter="search"
           )
           a.button.is-info.is-large(@click="search") Buscar
           a.button.is-danger.is-large &times;
@@ -22,6 +23,7 @@
         .columns.is-multiline
           .column.is-one-quarter(v-for="t in tracks")
             pm-track(
+              v-blur="t.preview_url",
               v-bind:class="{'is-active': t.id === selectedTrack}",
               v-bind:track="t",
               v-on:select="setSelectedTrack")

@@ -14,14 +14,14 @@
             strong {{track.name}}
           p.subtitle.is-6 {{track.artists[0].name}}
 
-      .content
-        small {{track.duration_ms}}
-        nav.level
-          .level-left
-            a.level-item
-              span.icon.is-small(v-on:click="selectTrack") ▶
-            a.level-item
-              span.icon.is-small(v-on:click="goToTrack(track.id)") 🗺
+        .content
+          small {{track.duration_ms | ms-to-mm}}
+          nav.level
+            .level-left
+              button.level-item.button.is-primary
+                span.icon.is-small(v-on:click="selectTrack") ▶
+              button.level-item.button.is-warning
+                span.icon.is-small(v-on:click="goToTrack(track.id)") 🗺
 </template>
 
 <script>
@@ -37,11 +37,15 @@ export default {
 
   methods: {
     selectTrack() {
+      if (!this.track.preview_url) { return; }
+
       this.$emit('select', this.track.id);
       this.$bus.$emit('set-track', this.track);
     },
 
     goToTrack(id) {
+      if (!this.track.preview_url) { return; }
+
       this.$router.push({ name: 'track', params: { id } });
     },
   },
