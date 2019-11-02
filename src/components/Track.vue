@@ -1,8 +1,8 @@
 <template lang="pug">
-  .card
+  .card(v-if="track && track.album")
     .card-image
       figure.image.is-1by1
-        img(v-if="track && track.album", v-bind:src="track.album.images[0].url")
+        img(v-bind:src="track.album.images[0].url")
 
     .card-content
       .media
@@ -20,6 +20,8 @@
           .level-left
             a.level-item
               span.icon.is-small(v-on:click="selectTrack") ▶
+            a.level-item
+              span.icon.is-small(v-on:click="goToTrack(track.id)") 🗺
 </template>
 
 <script>
@@ -37,6 +39,10 @@ export default {
     selectTrack() {
       this.$emit('select', this.track.id);
       this.$bus.$emit('set-track', this.track);
+    },
+
+    goToTrack(id) {
+      this.$router.push({ name: 'track', params: { id } });
     },
   },
 };

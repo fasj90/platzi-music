@@ -11,4 +11,9 @@ trackService.search = async function search(q) {
   return res.data;
 };
 
+trackService.getById = async function getById(id) {
+  const res = await platziMusicService.get(`/tracks/${id}`);
+  return res.data;
+};
+
 export default trackService;
