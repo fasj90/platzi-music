@@ -25,7 +25,11 @@
 </template>
 
 <script>
+import trackMixin from '../mixins/track';
+
 export default {
+  mixins: [trackMixin],
+
   props: {
     track: {
       type: Object,
@@ -36,13 +40,6 @@ export default {
   },
 
   methods: {
-    selectTrack() {
-      if (!this.track.preview_url) { return; }
-
-      this.$emit('select', this.track.id);
-      this.$bus.$emit('set-track', this.track);
-    },
-
     goToTrack(id) {
       if (!this.track.preview_url) { return; }
 
