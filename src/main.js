@@ -7,6 +7,7 @@ import blur from './directives/blur';
 
 import routes from './routes';
 import store from './store';
+import i18n from './i18n';
 
 import EventBus from './plugins/event-bus';
 
@@ -26,4 +27,5 @@ new Vue({
   render: h => h(App),
   router,
   store,
+  i18n,
 }).$mount('#app');
